@@ -3,6 +3,7 @@ import { loginFormControls } from "@/config"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
+import useScrollToTop from "../../hooks/useScrollToTop"
 import { loginUser } from "@/store/auth"
 import { toast } from "sonner"
 
@@ -12,6 +13,7 @@ const initialState = {
 }
 
 const Login = () => {
+  useScrollToTop();
   const [formData,setFormData] = useState(initialState)
   const dispatch = useDispatch();
 

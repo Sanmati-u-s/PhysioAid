@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Patch Header.jsx for mobile menu",
+			"type": "shell",
+			"command": "ed -s \"client/src/components/main/Header.jsx\" <<'ED'\n,H\n$g/^/p\nED",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "none"
+		}
+	]
+}

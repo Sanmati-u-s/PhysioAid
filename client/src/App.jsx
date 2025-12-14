@@ -4,6 +4,7 @@ import CheckAuth from './components/common/CheckAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from './store/auth';
 import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 
 // Importing layouts
 import MainLayout from './components/main/Layout';
@@ -15,6 +16,8 @@ import Home from './pages/main/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Dashboard from './pages/admin/Dashboard';
+import Exercises from './pages/main/Exercises';
+import ExercisesResults from './pages/main/ExercisesResults';
 
 function App() {
   // const user = {role:'user'};
@@ -31,10 +34,14 @@ function App() {
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
       <Routes>
+         <Route path="/" element={<Navigate to="/auth/login" replace />} />
         <Route path='main' element={<CheckAuth isAuthenticated={isAuthenticated} user={user}>
           <MainLayout />
         </CheckAuth>}>
         <Route path='home' element={<Home />}/>
+        <Route path='exercises' element={<Exercises/>}>
+        </Route>
+        <Route path='exercises/results' element={<ExercisesResults/>}/>
         </Route>
 
         <Route path='auth' element={<CheckAuth isAuthenticated={isAuthenticated} user={user}>

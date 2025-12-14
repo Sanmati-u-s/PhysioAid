@@ -1,9 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import useScrollToTop from '../../hooks/useScrollToTop'
 import { Button } from '@/components/ui/button'
 import { 
-  Heart, 
+  Heart,
   Brain, 
   Eye, 
   Smile, 
@@ -17,51 +18,52 @@ import {
 } from 'lucide-react'
 
 const Home = () => {
+  useScrollToTop()
   const navigate = useNavigate()
   const { isAuthenticated } = useSelector(state => state.auth)
 
   const specialties = [
     {
       icon: Activity,
-      title: 'Physiotherapy',
-      description: 'Expert guidance for muscle and joint pain relief',
-      color: 'bg-blue-500',
-      lightColor: 'bg-blue-50'
+      title: 'Pain Management',
+      description: 'Expert guidance for chronic and acute pain relief',
+      color: 'bg-teal-500',
+      lightColor: 'bg-teal-50'
     },
     {
-      icon: Smile,
-      title: 'Dental Care',
-      description: 'Solutions for oral health and dental concerns',
+      icon: Heart,
+      title: 'Sports Injury',
+      description: 'Recovery programs for athletic injuries',
+      color: 'bg-emerald-500',
+      lightColor: 'bg-emerald-50'
+    },
+    {
+      icon: Users,
+      title: 'Post-Surgery Rehab',
+      description: 'Structured rehabilitation after surgical procedures',
       color: 'bg-green-500',
       lightColor: 'bg-green-50'
     },
     {
       icon: Brain,
-      title: 'Migraine Care',
-      description: 'Specialized recommendations for headache relief',
-      color: 'bg-purple-500',
-      lightColor: 'bg-purple-50'
+      title: 'Neurological Therapy',
+      description: 'Specialized care for neurological conditions',
+      color: 'bg-cyan-500',
+      lightColor: 'bg-cyan-50'
     },
     {
-      icon: Heart,
-      title: 'Dermatology',
-      description: 'Skin care solutions and dermatological advice',
-      color: 'bg-pink-500',
-      lightColor: 'bg-pink-50'
-    },
-    {
-      icon: Eye,
-      title: 'Ophthalmology',
-      description: 'Eye care recommendations and vision health',
-      color: 'bg-indigo-500',
-      lightColor: 'bg-indigo-50'
+      icon: Users,
+      title: 'Elderly Care',
+      description: 'Mobility and strength programs for seniors',
+      color: 'bg-lime-500',
+      lightColor: 'bg-lime-50'
     },
     {
       icon: Stethoscope,
-      title: 'General Health',
-      description: 'Overall wellness and preventive healthcare',
-      color: 'bg-orange-500',
-      lightColor: 'bg-orange-50'
+      title: 'Preventive Care',
+      description: 'Exercises to prevent injuries and maintain wellness',
+      color: 'bg-teal-600',
+      lightColor: 'bg-teal-50'
     }
   ]
 
@@ -109,32 +111,32 @@ const Home = () => {
   return (
     <div className='w-full'>
       {/* Hero Section */}
-      <section className='relative bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 text-white overflow-hidden'>
+      <section className='relative bg-gradient-to-br from-teal-500 via-emerald-500 to-green-600 text-white overflow-hidden'>
         <div className='absolute inset-0 bg-grid-white/[0.05] bg-size-[20px_20px]' />
-        <div className='absolute inset-0 bg-linear-to-t from-blue-900/50 to-transparent' />
+        <div className='absolute inset-0 bg-gradient-to-t from-green-600/30 to-transparent' />
         
         <div className='container relative mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28'>
           <div className='max-w-4xl mx-auto text-center'>
             <div className='inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6 border border-white/20'>
-              <Heart className='w-4 h-4' fill='currentColor' />
+              <img src='/images/logo.webp' alt='Physio Aid Logo' className='w-5 h-5 object-contain rounded bg-white' style={{ background: 'transparent' }} />
               <span className='text-sm font-medium'>Your Healthcare Companion</span>
             </div>
             
             <h1 className='text-4xl md:text-6xl font-bold mb-6 leading-tight'>
-              Get the Right Care,
+              Expert Physiotherapy Care,
               <br />
-              <span className='text-blue-200'>At the Right Time</span>
+              <span className='text-teal-100'>Tailored for You</span>
             </h1>
             
-            <p className='text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto'>
-              Physio Aid helps you identify the right remedies and specialists based on your symptoms. 
-              Start your journey to better health today.
+            <p className='text-lg md:text-xl text-green-50 mb-8 max-w-2xl mx-auto'>
+              Your personalized physiotherapy companion. Get expert guidance, targeted exercises, 
+              and effective remedies for pain relief and recovery.
             </p>
             
             <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
               <Button 
                 size='lg' 
-                className='bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-xl'
+                className='bg-white cursor-pointer text-teal-600 hover:bg-teal-50 px-8 py-6 text-lg font-semibold shadow-xl'
                 onClick={() => navigate(isAuthenticated ? '/dashboard' : '/auth/register')}
               >
                 {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
@@ -143,26 +145,26 @@ const Home = () => {
               <Button 
                 size='lg' 
                 variant='outline' 
-                className='bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold'
-                onClick={() => navigate('/about')}
+                className='bg-transparent cursor-pointer border-2 border-white text-white hover:bg-white/10 px-8 py-6 text-lg font-semibold'
+                onClick={() => navigate('/main/exercises')}
               >
-                Learn More
+                View Exercises
               </Button>
             </div>
 
             {/* Stats */}
             <div className='grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto'>
               <div>
-                <div className='text-3xl md:text-4xl font-bold text-white mb-2'>5+</div>
-                <div className='text-sm text-blue-200'>Specialties Covered</div>
+                <div className='text-3xl md:text-4xl font-bold text-white mb-2'>50+</div>
+                <div className='text-sm text-teal-100'>Exercise Programs</div>
               </div>
               <div>
                 <div className='text-3xl md:text-4xl font-bold text-white mb-2'>24/7</div>
-                <div className='text-sm text-blue-200'>Access to Care</div>
+                <div className='text-sm text-teal-100'>Expert Guidance</div>
               </div>
               <div>
                 <div className='text-3xl md:text-4xl font-bold text-white mb-2'>100%</div>
-                <div className='text-sm text-blue-200'>Personalized</div>
+                <div className='text-sm text-teal-100'>Personalized</div>
               </div>
             </div>
           </div>
@@ -192,10 +194,10 @@ const Home = () => {
             {features.map((feature, index) => (
               <div 
                 key={index}
-                className='bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 group'
+                className='bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-teal-200 group'
               >
-                <div className='w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors duration-300'>
-                  <feature.icon className='w-7 h-7 text-blue-600 group-hover:text-white transition-colors duration-300' />
+                <div className='w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-500 transition-colors duration-300'>
+                  <feature.icon className='w-7 h-7 text-teal-600 group-hover:text-white transition-colors duration-300' />
                 </div>
                 <h3 className='text-xl font-bold text-gray-900 mb-3'>{feature.title}</h3>
                 <p className='text-gray-600'>{feature.description}</p>
@@ -210,10 +212,10 @@ const Home = () => {
         <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
-              Medical Domains We Cover
+              Physiotherapy Areas We Specialize In
             </h2>
             <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
-              Comprehensive care across multiple specialties
+              Comprehensive physiotherapy care tailored to your needs
             </p>
           </div>
 
@@ -221,10 +223,14 @@ const Home = () => {
             {specialties.map((specialty, index) => (
               <div 
                 key={index}
-                className={`${specialty.lightColor} rounded-2xl p-6 hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-gray-200 group`}
+                className={`${specialty.lightColor} rounded-2xl p-6 hover:shadow-lg transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-teal-200 group`}
               >
                 <div className={`w-12 h-12 ${specialty.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <specialty.icon className='w-6 h-6 text-white' />
+                  {specialty.title === 'Sports Injury' ? (
+                    <img src='/images/logo.webp' alt='Physio Aid Logo' className='w-7 h-7 object-contain rounded bg-white' style={{ background: 'transparent' }} />
+                  ) : (
+                    <specialty.icon className='w-6 h-6 text-white' />
+                  )}
                 </div>
                 <h3 className='text-lg font-bold text-gray-900 mb-2'>{specialty.title}</h3>
                 <p className='text-sm text-gray-600'>{specialty.description}</p>
@@ -235,7 +241,7 @@ const Home = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className='py-20 bg-gradient-to-br from-gray-50 to-blue-50'>
+      <section className='py-20 bg-gradient-to-br from-gray-50 to-teal-50'>
         <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
@@ -250,13 +256,13 @@ const Home = () => {
             {howItWorks.map((item, index) => (
               <div key={index} className='relative'>
                 <div className='bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 h-full'>
-                  <div className='text-5xl font-bold text-blue-100 mb-4'>{item.step}</div>
+                  <div className='text-5xl font-bold text-teal-100 mb-4'>{item.step}</div>
                   <h3 className='text-lg font-bold text-gray-900 mb-3'>{item.title}</h3>
                   <p className='text-sm text-gray-600'>{item.description}</p>
                 </div>
                 {index < howItWorks.length - 1 && (
                   <div className='hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2'>
-                    <ArrowRight className='w-6 h-6 text-blue-300' />
+                    <ArrowRight className='w-6 h-6 text-teal-300' />
                   </div>
                 )}
               </div>
@@ -266,30 +272,28 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className='py-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white'>
+      <section className='py-20 bg-gradient-to-r from-teal-500 to-emerald-600 text-white'>
         <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='max-w-3xl mx-auto text-center'>
             <h2 className='text-3xl md:text-4xl font-bold mb-6'>
               Ready to Take Control of Your Health?
             </h2>
-            <p className='text-lg text-blue-100 mb-8'>
-              Join Physio Aid today and get personalized healthcare recommendations 
-              tailored to your needs. Start your journey to better health now.
+            <p className='text-lg text-teal-50 mb-8'>
+              Join Physio Aid today and get personalized physiotherapy programs 
+              designed specifically for your recovery and wellness goals.
             </p>
-            
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
               <Button 
                 size='lg' 
-                className='bg-white text-blue-600 hover:bg-blue-50 px-8 py-6 text-lg font-semibold shadow-xl'
+                className='bg-white cursor-pointer text-teal-600 hover:bg-teal-50 px-8 py-6 text-lg font-semibold shadow-xl'
                 onClick={() => navigate(isAuthenticated ? '/dashboard' : '/auth/register')}
               >
                 {isAuthenticated ? 'Access Dashboard' : 'Sign Up Now'}
                 <ArrowRight className='w-5 h-5 ml-2' />
               </Button>
             </div>
-
             {/* Trust badges */}
-            <div className='flex flex-wrap items-center justify-center gap-6 mt-12 text-sm text-blue-200'>
+            <div className='flex flex-wrap items-center justify-center gap-6 mt-12 text-sm text-teal-100'>
               <div className='flex items-center gap-2'>
                 <CheckCircle2 className='w-5 h-5' />
                 <span>Free to use</span>
@@ -307,7 +311,7 @@ const Home = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Home 
+export default Home;

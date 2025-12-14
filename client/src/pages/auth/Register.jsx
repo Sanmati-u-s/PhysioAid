@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Form from '@/components/common/Form'
 import { registerFormControls } from '@/config'
+import useScrollToTop from '../../hooks/useScrollToTop'
 import { registerUser } from '@/store/auth'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -16,8 +17,7 @@ const initialState = {
   gender: ''
 }
 
-const Register = () => {
-  const [formData,setFormData] = useState(initialState)
+const Register = () => {  useScrollToTop();  const [formData,setFormData] = useState(initialState)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

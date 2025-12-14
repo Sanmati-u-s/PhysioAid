@@ -66,9 +66,10 @@ const loginPatient = async (req,res) => {
         }
 
         const token = jwt.sign({
-            id:checkPatient._id,
-            email:checkPatient.email,
-            role:checkPatient.role
+            id: checkPatient._id,
+            email: checkPatient.email,
+            role: checkPatient.role,
+            name: checkPatient.patientName
         }, 'CLIENT_SECERT_KEY', {expiresIn:'7d'});
 
         res.cookie('token',token, {httpOnly:true,secure:false}).json({
