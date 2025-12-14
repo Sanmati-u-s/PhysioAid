@@ -18,6 +18,7 @@ import Register from './pages/auth/Register';
 import Dashboard from './pages/admin/Dashboard';
 import Exercises from './pages/main/Exercises';
 import ExercisesResults from './pages/main/ExercisesResults';
+import Profile from './pages/main/Profile';
 
 function App() {
   // const user = {role:'user'};
@@ -35,23 +36,24 @@ function App() {
     <div className='flex flex-col overflow-hidden bg-white'>
       <Routes>
          <Route path="/" element={<Navigate to="/auth/login" replace />} />
-        <Route path='main' element={<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+        <Route path='main' element={<CheckAuth isAuthenticated={isAuthenticated} isLoading={isLoading} user={user}>
           <MainLayout />
         </CheckAuth>}>
         <Route path='home' element={<Home />}/>
+          <Route path='profile' element={<Profile />}/>
         <Route path='exercises' element={<Exercises/>}>
         </Route>
         <Route path='exercises/results' element={<ExercisesResults/>}/>
         </Route>
 
-        <Route path='auth' element={<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+        <Route path='auth' element={<CheckAuth isAuthenticated={isAuthenticated} isLoading={isLoading} user={user}>
           <AuthLayout />
         </CheckAuth>}>
           <Route path='login' element={<Login/>}/>
           <Route path='register' element={<Register/>}/>
         </Route>
 
-        <Route path='admin' element={<CheckAuth isAuthenticated={isAuthenticated} user={user}>
+        <Route path='admin' element={<CheckAuth isAuthenticated={isAuthenticated} isLoading={isLoading} user={user}>
           <AdminLayout />
         </CheckAuth>}>
           <Route path='dashboard' element={<Dashboard/>}/>

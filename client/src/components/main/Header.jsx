@@ -62,12 +62,16 @@ export const Header = () => {
             </Button>
 
             {isAuthenticated && user && (
-              <div className='flex items-center gap-2 px-3 py-1.5 bg-teal-50 rounded-lg'>
+              <Button variant='ghost'
+                onClick={() => navigate('/main/profile')}
+              >
+                <div className='flex cursor-pointer items-center gap-2 px-3 py-1.5 bg-teal-50 rounded-lg'>
                 <User className='w-4 h-4 text-teal-600' />
                 <span className='text-sm font-medium text-gray-700'>
                   {user.name}
                 </span>
               </div>
+              </Button>
             )}
             
             <Button 
@@ -89,12 +93,18 @@ export const Header = () => {
           {/* Mobile right actions: Name pill + menu toggle */}
           <div className='md:hidden flex items-center gap-2'>
             {isAuthenticated && user && (
-              <div className='flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 rounded-md max-w-[50vw]'>
+              <Button
+                variant='ghost'
+                onClick={() => navigate('/main/profile')}
+                className='p-0 cursor-pointer'
+              >
+                <div className='flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 rounded-md max-w-[50vw]'>
                 <User className='w-4 h-4 text-teal-600' />
                 <span className='text-xs font-medium text-gray-700 truncate'>
                   {user.name}
                 </span>
               </div>
+              </Button>
             )}
             <Button
               variant='outline'

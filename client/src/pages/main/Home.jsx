@@ -111,9 +111,9 @@ const Home = () => {
   return (
     <div className='w-full'>
       {/* Hero Section */}
-      <section className='relative bg-gradient-to-br from-teal-500 via-emerald-500 to-green-600 text-white overflow-hidden'>
+      <section className='relative bg-linear-to-br from-teal-500 via-emerald-500 to-green-600 text-white overflow-hidden'>
         <div className='absolute inset-0 bg-grid-white/[0.05] bg-size-[20px_20px]' />
-        <div className='absolute inset-0 bg-gradient-to-t from-green-600/30 to-transparent' />
+        <div className='absolute inset-0 bg-linear-to-t from-green-600/30 to-transparent' />
         
         <div className='container relative mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28'>
           <div className='max-w-4xl mx-auto text-center'>
@@ -241,7 +241,7 @@ const Home = () => {
       </section>
 
       {/* How It Works Section */}
-      <section className='py-20 bg-gradient-to-br from-gray-50 to-teal-50'>
+      <section className='py-20 bg-linear-to-br from-gray-50 to-teal-50'>
         <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4'>
@@ -272,7 +272,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className='py-20 bg-gradient-to-r from-teal-500 to-emerald-600 text-white'>
+      <section className='py-20 bg-linear-to-r from-teal-500 to-emerald-600 text-white'>
         <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='max-w-3xl mx-auto text-center'>
             <h2 className='text-3xl md:text-4xl font-bold mb-6'>

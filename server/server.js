@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors')
 
 const authRoutes = require('./routes/auth/auth-routes');
+const profileRoutes = require('./routes/profile/profile-routes');
 // MongoDB connection
 mongoose.connect('mongodb://localhost:27017/physioAdi')
 .then(() => console.log('MongoDB connected'))
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use('/api/auth',authRoutes);
+app.use('/api/profile',profileRoutes);
 
 app.listen(PORT,() => {
     console.log(`Server is running on http://localhost:${PORT}`);

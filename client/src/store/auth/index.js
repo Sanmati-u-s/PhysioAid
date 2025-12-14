@@ -3,8 +3,8 @@ import axios from "axios";
 
 const initialState = {
     isAuthenticated: false,
-    isLoading:false,
-    user:null,
+    isLoading: true, // start in loading state until checkAuth resolves
+    user: null,
 }
 
 export const registerUser = createAsyncThunk('/auth/register',

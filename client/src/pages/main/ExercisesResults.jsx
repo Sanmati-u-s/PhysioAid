@@ -100,7 +100,7 @@ const ExercisesResults = () => {
                       {exercise.description}
                     </p>
                   </div>
-                  <div className="ml-4 flex-shrink-0">
+                  <div className="ml-4 shrink-0">
                     <span className="inline-block bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-full">
                       {exercise.type}
                     </span>
@@ -148,7 +148,7 @@ const ExercisesResults = () => {
                   <ol className="space-y-3">
                     {exercise.instructions.map((instruction, index) => (
                       <li key={index} className="flex gap-4">
-                        <span className="flex-shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
+                        <span className="shrink-0 flex items-center justify-center h-8 w-8 rounded-full bg-blue-600 text-white font-semibold text-sm">
                           {index + 1}
                         </span>
                         <span className="text-gray-700 pt-1">
