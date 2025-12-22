@@ -89,24 +89,37 @@ const loginPatient = async (req,res) => {
 }
 
 // Auth middleware
-const authMiddleware = (req,res,next) => {
+const authMiddleware = async (req, res, next) => {
     const token = req.cookies.token || '';
-    if(!token){
+    if (!token) {
         return res.status(401).json({
-            success:false,
-            message:'Unauthorized user!'
-        })
+            success: false,
+            message: 'Unauthorized user!'
+        });
     }
 
-    try{
-        const decoded = jwt.verify(token,'CLIENT_SECERT_KEY');
+    try {
+        const decoded = jwt.verify(token, 'CLIENT_SECERT_KEY');
         req.user = decoded;
+        req.userId = decoded.id;
+        
+        // Fetch full user details for email functionality
+        const patient = await Patient.findById(decoded.id).select('-password');
+        if (patient) {
+            req.user = {
+                id: patient._id,
+                email: patient.email,
+                patientName: patient.patientName,
+                role: patient.role
+            };
+        }
+        
         next();
-    }catch(error){
+    } catch (error) {
         return res.status(401).json({
-            success:false,
-            message:'Invalid token!'
-        })
+            success: false,
+            message: 'Invalid token!'
+        });
     }
 }
 

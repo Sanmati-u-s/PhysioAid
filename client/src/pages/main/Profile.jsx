@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfile, updateProfile, changePassword } from '../../store/profile';
+import { getReminders, createReminder, updateReminder, deleteReminder, sendTestReminder } from '../../store/reminder';
 import useScrollToTop from '../../hooks/useScrollToTop';
 import { toast } from 'sonner';
-import { User, Mail, Phone, Calendar, Users, Lock, Edit2, Save, X } from 'lucide-react';
+import { User, Mail, Phone, Calendar, Users, Lock, Edit2, Save, X, Bell, Target, Clock, Trash2, Send } from 'lucide-react';
 
 const Profile = () => {
   useScrollToTop();
   const dispatch = useDispatch();
   const { profile, isLoading } = useSelector((state) => state.profile);
+  const { reminders, isLoading: remindersLoading } = useSelector((state) => state.reminder);
   const { user } = useSelector((state) => state.auth);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [showReminderForm, setShowReminderForm] = useState(false);
+  const [editingReminder, setEditingReminder] = useState(null);
   
   const [formData, setFormData] = useState({
     patientName: '',
@@ -28,8 +32,17 @@ const Profile = () => {
     confirmPassword: '',
   });
 
+  const [reminderData, setReminderData] = useState({
+    exerciseGoal: '',
+    targetDate: '',
+    frequency: 'daily',
+    reminderTime: '09:00',
+    notes: ''
+  });
+
   useEffect(() => {
     dispatch(getProfile());
+    dispatch(getReminders());
   }, [dispatch]);
 
   useEffect(() => {
@@ -128,6 +141,134 @@ const Profile = () => {
       }
     } catch (error) {
       toast.error(error.message || 'Failed to change password');
+    }
+  };
+
+  const handleReminderChange = (e) => {
+    const { name, value } = e.target;
+    setReminderData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleCreateReminder = async (e) => {
+    e.preventDefault();
+
+    if (!reminderData.exerciseGoal || !reminderData.targetDate || !reminderData.reminderTime) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+
+    try {
+      const result = await dispatch(createReminder(reminderData)).unwrap();
+      if (result.success) {
+        toast.success('Reminder created successfully! Check your email for confirmation.');
+        setReminderData({
+          exerciseGoal: '',
+          targetDate: '',
+          frequency: 'daily',
+          reminderTime: '09:00',
+          notes: ''
+        });
+        setShowReminderForm(false);
+      }
+    } catch (error) {
+      toast.error(error.message || 'Failed to create reminder');
+    }
+  };
+
+  const handleUpdateReminder = async (e) => {
+    e.preventDefault();
+
+    if (!reminderData.exerciseGoal || !reminderData.targetDate || !reminderData.reminderTime) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+
+    try {
+      const result = await dispatch(updateReminder({ 
+        id: editingReminder._id, 
+        data: reminderData 
+      })).unwrap();
+      if (result.success) {
+        toast.success('Reminder updated successfully!');
+        setReminderData({
+          exerciseGoal: '',
+          targetDate: '',
+          frequency: 'daily',
+          reminderTime: '09:00',
+          notes: ''
+        });
+        setEditingReminder(null);
+        setShowReminderForm(false);
+      }
+    } catch (error) {
+      toast.error(error.message || 'Failed to update reminder');
+    }
+  };
+
+  const handleDeleteReminder = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this reminder?')) {
+      return;
+    }
+
+    try {
+      const result = await dispatch(deleteReminder(id)).unwrap();
+      if (result.success) {
+        toast.success('Reminder deleted successfully');
+      }
+    } catch (error) {
+      toast.error(error.message || 'Failed to delete reminder');
+    }
+  };
+
+  const handleSendTestEmail = async (id) => {
+    try {
+      const result = await dispatch(sendTestReminder(id)).unwrap();
+      if (result.success) {
+        toast.success('Test email sent! Check your inbox.');
+      }
+    } catch (error) {
+      toast.error(error.message || 'Failed to send test email');
+    }
+  };
+
+  const handleEditReminder = (reminder) => {
+    setEditingReminder(reminder);
+    setReminderData({
+      exerciseGoal: reminder.exerciseGoal,
+      targetDate: new Date(reminder.targetDate).toISOString().split('T')[0],
+      frequency: reminder.frequency,
+      reminderTime: reminder.reminderTime,
+      notes: reminder.notes || ''
+    });
+    setShowReminderForm(true);
+  };
+
+  const handleCancelReminderForm = () => {
+    setShowReminderForm(false);
+    setEditingReminder(null);
+    setReminderData({
+      exerciseGoal: '',
+      targetDate: '',
+      frequency: 'daily',
+      reminderTime: '09:00',
+      notes: ''
+    });
+  };
+
+  const handleToggleActive = async (reminder) => {
+    try {
+      const result = await dispatch(updateReminder({
+        id: reminder._id,
+        data: { isActive: !reminder.isActive }
+      })).unwrap();
+      if (result.success) {
+        toast.success(`Reminder ${!reminder.isActive ? 'activated' : 'deactivated'}`);
+      }
+    } catch (error) {
+      toast.error('Failed to update reminder status');
     }
   };
 
@@ -381,6 +522,230 @@ const Profile = () => {
                 </button>
               </div>
             </form>
+          )}
+        </div>
+
+        {/* Exercise Reminders Section */}
+        <div className="bg-white rounded-lg shadow-md p-8 mt-6">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                <Bell size={20} />
+                Exercise Reminders
+              </h3>
+              <p className="text-gray-600 text-sm mt-1">Set goals and receive email reminders for your exercises</p>
+            </div>
+            {!showReminderForm && (
+              <button
+                type="button"
+                onClick={() => setShowReminderForm(true)}
+                className="px-4 py-2 cursor-pointer bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                <Target size={18} />
+                New Reminder
+              </button>
+            )}
+          </div>
+
+          {/* Reminder Form */}
+          {showReminderForm && (
+            <form onSubmit={editingReminder ? handleUpdateReminder : handleCreateReminder} className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <h4 className="text-lg font-semibold text-gray-800 mb-4">
+                {editingReminder ? 'Edit Reminder' : 'Create New Reminder'}
+              </h4>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Exercise Goal *
+                  </label>
+                  <textarea
+                    name="exerciseGoal"
+                    value={reminderData.exerciseGoal}
+                    onChange={handleReminderChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="E.g., Complete 3 sets of shoulder exercises daily"
+                    rows="2"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Target Date *
+                    </label>
+                    <input
+                      type="date"
+                      name="targetDate"
+                      value={reminderData.targetDate}
+                      onChange={handleReminderChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Frequency *
+                    </label>
+                    <select
+                      name="frequency"
+                      value={reminderData.frequency}
+                      onChange={handleReminderChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Reminder Time *
+                    </label>
+                    <input
+                      type="time"
+                      name="reminderTime"
+                      value={reminderData.reminderTime}
+                      onChange={handleReminderChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notes (Optional)
+                  </label>
+                  <textarea
+                    name="notes"
+                    value={reminderData.notes}
+                    onChange={handleReminderChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Additional notes or instructions..."
+                    rows="2"
+                  />
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    disabled={remindersLoading}
+                    className="px-6 py-2 cursor-pointer bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
+                  >
+                    {editingReminder ? 'Update Reminder' : 'Create Reminder'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancelReminderForm}
+                    className="px-6 py-2 cursor-pointer bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </form>
+          )}
+
+          {/* Reminders List */}
+          {remindersLoading && reminders.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-2 text-gray-600">Loading reminders...</p>
+            </div>
+          ) : reminders.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <Bell size={48} className="mx-auto mb-4 opacity-50" />
+              <p>No reminders set yet. Create one to get started!</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {reminders.map((reminder) => (
+                <div
+                  key={reminder._id}
+                  className={`p-4 rounded-lg border-2 ${
+                    reminder.isActive 
+                      ? 'bg-white border-blue-200' 
+                      : 'bg-gray-50 border-gray-300 opacity-60'
+                  }`}
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Target size={18} className="text-blue-600" />
+                        <h4 className="font-semibold text-gray-800">{reminder.exerciseGoal}</h4>
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          reminder.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600'
+                        }`}>
+                          {reminder.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <Calendar size={14} />
+                          <span>Target: {new Date(reminder.targetDate).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock size={14} />
+                          <span>{reminder.reminderTime} • {reminder.frequency}</span>
+                        </div>
+                        {reminder.lastSent && (
+                          <div className="flex items-center gap-2">
+                            <Send size={14} />
+                            <span>Last: {new Date(reminder.lastSent).toLocaleDateString()}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {reminder.notes && (
+                        <p className="mt-2 text-sm text-gray-600 italic">{reminder.notes}</p>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2 ml-4">
+                      <button
+                        onClick={() => handleToggleActive(reminder)}
+                        className={`p-2 rounded-lg transition-colors cursor-pointer ${
+                          reminder.isActive 
+                            ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' 
+                            : 'bg-green-100 text-green-700 hover:bg-green-200'
+                        }`}
+                        title={reminder.isActive ? 'Deactivate' : 'Activate'}
+                      >
+                        <Bell size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleSendTestEmail(reminder._id)}
+                        className="p-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors cursor-pointer"
+                        title="Send test email"
+                      >
+                        <Send size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleEditReminder(reminder)}
+                        className="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
+                        title="Edit"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteReminder(reminder._id)}
+                        className="p-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors cursor-pointer"
+                        title="Delete"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
