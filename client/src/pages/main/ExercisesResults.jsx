@@ -7,6 +7,7 @@ const ExercisesResults = () => {
   useScrollToTop();
   const location = useLocation();
   const navigate = useNavigate();
+  const [videoError, setVideoError] = useState({});
 
   const { selectedMuscle, selectedMuscleName, filters } = location.state || {};
 
@@ -48,6 +49,13 @@ const ExercisesResults = () => {
     }
 
     return exercises;
+  };
+
+  // Map exercise id to its demo video inside public/videos
+  const getExerciseVideoSrc = (exerciseId) => `/videos/${exerciseId}.mp4`;
+
+  const handleVideoError = (exerciseId) => {
+    setVideoError((prev) => ({ ...prev, [exerciseId]: true }));
   };
 
   const filteredExercises = getFilteredExercises();
@@ -173,6 +181,37 @@ const ExercisesResults = () => {
                     <span className="text-teal-800 font-semibold">
                       {exercise.duration}
                     </span>
+                  </p>
+                </div>
+
+                {/* Demo Video */}
+                <div className="mb-6">
+                  <h3 className="font-bold text-gray-800 mb-3 text-lg">
+                    Demo Video
+                  </h3>
+                  <div className="rounded-xl overflow-hidden shadow-inner bg-gray-900">
+                    {videoError[exercise.id] ? (
+                      <div className="w-full aspect-video flex items-center justify-center text-gray-200 text-lg font-semibold">
+                        Video coming soon
+                      </div>
+                    ) : (
+                      <video
+                        className="w-full aspect-video"
+                        src={getExerciseVideoSrc(exercise.id)}
+                        controls
+                        preload="metadata"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        onError={() => handleVideoError(exercise.id)}
+                      >
+                        Your browser does not support embedded videos.
+                      </video>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Video loads from public/videos/{exercise.id}.mp4.
                   </p>
                 </div>
 

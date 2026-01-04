@@ -10,7 +10,7 @@ const reminderRoutes = require('./routes/reminder/reminder-routes');
 const { startReminderScheduler } = require('./services/reminderScheduler');
 
 // MongoDB connection
-mongoose.connect('mongodb://localhost:27017/physioAdi')
+mongoose.connect( process.env.MONGO_URI || 'mongodb://localhost:27017/physioAdi')
 .then(() => {
     console.log('MongoDB connected');
     // Start the reminder scheduler after DB connection
