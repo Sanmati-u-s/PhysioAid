@@ -70,7 +70,7 @@ const loginPatient = async (req,res) => {
             email: checkPatient.email,
             role: checkPatient.role,
             name: checkPatient.patientName
-        }, 'CLIENT_SECERT_KEY', {expiresIn:'7d'});
+        }, 'CLIENT_SECERT_KEY', {expiresIn:process.env.JWT_EXPIRES_IN});
 
         res.cookie('token',token, {httpOnly:true,secure:false}).json({
             success:true,

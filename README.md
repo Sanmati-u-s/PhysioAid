@@ -63,5 +63,3 @@ CLIENT_URL=http://localhost:5173
 - Client: `npm run dev`, `npm run build`, `npm run preview`, `npm run lint`
 - Server: `npm run dev`
 
-## License
-MIT (add your notice if needed).
